@@ -1,0 +1,108 @@
+<meta http-equiv="X-UA-Compatible" content="IE=7,IE=8,IE=9" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Pipeline Viewer</title>
+<link rel="stylesheet" type="text/css" href="http://js.arcgis.com/3.8/js/dojo/dijit/themes/claro/claro.css">
+<link rel="stylesheet" href="http://js.arcgis.com/3.8/js/esri/css/esri.css">
+<link rel="stylesheet" type="text/css" href="Pmap/layout.css">
+
+<script type="text/javascript" src="Pmap/config.js"></script>
+<script type="text/javascript" src="Pmap/AGSAPI.js"></script>
+<script type="text/javascript" src="Pmap/changecursor.js"></script>
+<script src="http://js.arcgis.com/3.8/"></script>
+<script type="text/javascript">
+    var djConfig = {
+        parseOnLoad: true
+    };
+</script>
+
+
+
+<script type="text/javascript" language="javascript">
+    //var coordsInitial = window.parent.thd.table().field('CS_MapsData').value();
+    /*var coordsInitial = window.parent.thd.table().field('MapsData').value();
+    var enablonMap;
+    if (coordsInitial.length > 0) {
+        var coordsTemp = coordsInitial.split(';');
+        enablonMap = coordsTemp[0];
+        var eventPosX = coordsTemp[1];
+        var eventPosY = coordsTemp[2];
+    }*/
+</script>
+<div id="navToolbar" dojoType="dijit.Toolbar">
+    %s2
+    <div dojoType="dijit.form.Button" id="clickforXY" iconClass="clickforXY" onClick="navToolbar.deactivate(); setPointMode();">Click for XY
+    </div>
+    <div dojoType="dijit.form.Button" iconClass="zoomtoXY" onClick="zoomToXY();">
+        Zoom to XY
+    </div>
+    <span id='dropdownTOC'></span>
+
+    <div dojoType="dijit.form.DropDownButton" iconClass="baselyrs" showLabel="true">
+        <span>
+                    		Base Map Layers
+                		</span>
+        <div dojoType="dijit.TooltipDialog" style="width:400px; height:350px;">
+            <div id="basemapGallery">
+            </div>
+        </div>
+    </div>
+
+    <div dojoType="dijit.form.DropDownButton" iconClass="oplyrs" showLabel="true">
+        <span>
+                    		Operational Layers
+                		</span>
+        <div dojoType="dijit.TooltipDialog">
+            <b>Locations: <span id="offices"></b>
+            <br>
+            <input type='checkbox' class='list_item' checked='checked' id='0' value=0 onclick='updatedynamicMapServiceLayerVisibility();' />Offices
+            <br>
+            </span>
+            <br/>
+            <b>Assets: <span id="asset_list"></b>
+            <br>
+            <input type='checkbox' class='list_item' id='4' value=4 onclick='updatedynamicMapServiceLayerVisibility();' />Compressors
+            <br>
+            <input type='checkbox' class='list_item' id='2' value=2 onclick='updatedynamicMapServiceLayerVisibility();' />Meters
+            <br>
+            <input type='checkbox' class='list_item' id='5' value=5 onclick='updatedynamicMapServiceLayerVisibility();' />Plants
+            <br>
+            <input type='checkbox' class='list_item' id='3' value=3 onclick='updatedynamicMapServiceLayerVisibility();' />Valves
+            <br>
+            </span>
+            <br/>
+            <b>Pipelines: <span id="pipeline_list"></b>
+            <br>
+            <input type='radio' class='list_item' checked='checked' name='pipelines' id='16' value=16 onclick='updatedynamicMapServiceLayerVisibility();' />General
+            <br>
+            <input type='radio' class='list_item' name='pipelines' id='14' value=14 onclick='updatedynamicMapServiceLayerVisibility();' />By Usage
+            <br>
+            <input type='radio' class='list_item' name='pipelines' id='15' value=15 onclick='updatedynamicMapServiceLayerVisibility();' />By System
+            <br>
+            <input type='checkbox' class='list_item' id='18' value=18 onclick='updatedynamicMapServiceLayerVisibility();' />Proposed
+            <br>
+            </span>
+            <br/>
+        </div>
+    </div>
+
+</div>
+<div id="map" dojotype="dijit.layout.ContentPane" region="center" style="border:1px solid #000;">
+    <img id="loadingImg" src="Pmap/loading.gif" style="position:absolute; left:5px; top:30px; z-index:100;" />
+    <div id="results" class="box semi-transparent" style="position: absolute; padding: 1px; right: 1px; bottom: 1px; z-index: 500; color: rgb(64, 64, 64); font-weight: bold;"></div>
+</div>
+
+
+<div dojoType="dijit.form.Button" id="zoomin" iconClass="zoominIcon" onClick="drawToolbar.deactivate(); navToolbar.activate(esri.toolbars.Navigation.ZOOM_IN);" onMouseDown="changeCursor('zoomin')">
+</div>
+<div dojoType="dijit.form.Button" id="zoomout" iconClass="zoomoutIcon" onClick="drawToolbar.deactivate(); navToolbar.activate(esri.toolbars.Navigation.ZOOM_OUT);" onmousedown="changeCursor('zoomout')">
+</div>
+<div dojoType="dijit.form.Button" id="zoomfullext" iconClass="zoomfullextIcon" onClick="drawToolbar.deactivate(); navToolbar.zoomToFullExtent();">
+</div>
+<div dojoType="dijit.form.Button" id="zoomprev" iconClass="zoomprevIcon" onClick="drawToolbar.deactivate(); navToolbar.zoomToPrevExtent();">
+</div>
+<div dojoType="dijit.form.Button" id="zoomnext" iconClass="zoomnextIcon" onClick="drawToolbar.deactivate(); navToolbar.zoomToNextExtent();">
+</div>
+<div dojoType="dijit.form.Button" id="pan" iconClass="panIcon" onClick="drawToolbar.deactivate(); navToolbar.activate(esri.toolbars.Navigation.PAN);" onmousedown="changeCursor('pan')">
+</div>
+<div dojoType="dijit.form.Button" id="deactivate" iconClass="deactivateIcon" onClick="deactAllTools()">
+</div>

@@ -1,0 +1,102 @@
+      html, body { 
+        height: 100%; width: 100%; margin: 0; 
+      } 
+      body{
+        background-color:white; overflow:hidden; 
+        font-family: "Trebuchet MS"; 
+      }
+      #header {
+      	background-color: #95c1e8;
+        background-image: url('Titlebanner.jpg');
+		background-repeat: no-repeat;
+        margin: 0px;
+		/*box-shadow: 3px 3px 19px rgba(0,0,0,.8);
+		-webkit-box-shadow: 3px 3px 19px rgba(0,0,0,.8);
+		-moz-box-shadow: 3px 3px 19px rgba(0,0,0,.8);*/
+        border: solid 0px #224a54;
+        color:white; font-size:16pt; 
+        text-align:left; font-weight:bold; height:45px;
+      }
+      #subheader {
+        font-size:small;
+        color:white;
+        padding-left:20px;
+      }
+      #results {
+        font-size:small;
+        color:white;
+      }
+      #leftPane{
+        margin: 0px;
+        padding:0px;
+        background-color:white;
+        color:#3f3f3f;
+        border: solid 0px #224a54;
+        width:200px;
+     }
+	 #map {
+        margin: 0px;
+        border:solid 0px #224a54;
+        -moz-border-radius: 0px;
+      }
+	  
+      .dijitTabInnerDiv{
+        background-color:#ecefe4;
+      }
+      #tabs{
+        padding:0px;
+      }
+	  
+	  .box {
+	    margin-top: 5px;
+	    color: #292929;
+	    border: 1px solid #9F9F9F;
+	    background-color: #EFEFEF;
+	    padding-left: 10px;
+	    padding-right: 20px;
+	    margin-left: 10px;
+	    margin-bottom: 1px;
+	    border-radius: 10px;
+	    /* these cover all the shadow and round edges bases for the incomplete CS3 spec for ffox, safari, chrome, and opera */
+	    -o-border-radius: 10px;
+	    -moz-border-radius: 10px;
+	    -webkit-border-radius: 10px;
+	    box-shadow: 8px 8px 16px #adadad;
+	    -webkit-box-shadow: 8px 8px 16px #adadad;
+	    -moz-box-shadow: 8px 8px 16px #adadad;
+	    -o-box-shadow: 8px 8px 16px #adadad;
+	    overflow: hidden;
+		}
+		
+		div.semi-transparent {
+    	background: url("semi-transparent.png") repeat scroll 0 0 transparent;
+		}
+	  
+	  .esriBasemapGallerySelectedNode .esriBasemapGalleryThumbnail {
+                border-color: #66FFFF !important;
+            }
+	  
+	  .zoominIcon { background-image:url(nav_zoomin.png); width:16px; height:16px; }
+      .zoomoutIcon { background-image:url(nav_zoomout.png); width:16px; height:16px; }
+      .zoomfullextIcon { background-image:url(nav_fullextent.png); width:16px; height:16px; }
+      .zoomprevIcon { background-image:url(nav_previous.png); width:16px; height:16px; }
+      .zoomnextIcon { background-image:url(nav_next.png); width:16px; height:16px; }
+      .panIcon { background-image:url(nav_pan.png); width:16px; height:16px; }
+	  .deactivateIcon { background-image:url(nav_decline.png); width:16px; height:16px; }
+	  .zoomtoXY { background-image:url(zoom.png); width:16px; height:16px; }
+	  .baselyrs {
+                background-image: url(map.png);
+                width: 16px;
+                height: 16px;
+            }
+	  .oplyrs {
+                background-image: url(layers.png);
+                width: 16px;
+                height: 16px;
+            }
+	  .clickforXY {
+                background-image: url(yellow-flag.png);
+                width: 16px;
+                height: 16px;
+            }
+	  
