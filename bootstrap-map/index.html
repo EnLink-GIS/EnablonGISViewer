@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Safari iOS - apps only -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- Chrome for Android - NEW! -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="images/brand.png">
+    <link rel="shortcut icon" href="images/favicon.ico">
+
+    <title>Clickable Bootstrap Map for Enlink</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Bootstrap-map-js -->
+    <link rel="stylesheet" type="text/css" href="http://js.arcgis.com/3.10/js/esri/css/esri.css">   
+    <link rel="stylesheet" type="text/css" href="css/bootstrapmap.css">   
+    
+    <style type="text/css">
+
+      #mapDiv {
+       min-height: 90px; 
+       max-height: 350px;
+      }
+
+      #mapLegendDiv {
+        height: 300px;  
+        overflow: scroll; 
+        margin-bottom: 20px;      
+      }
+
+      #mapTitle {
+        margin-left: 15px;
+      }
+
+      #mapPanel {
+        padding: 0;
+      }
+
+      .panel-group {
+        margin-bottom: 0px;
+      }
+
+      .panel-group-map {
+        margin-bottom: 15px;
+      }
+
+      table {
+        border-collapse: none;
+        border-spacing: none;
+      }
+
+      [class*="col-"] {
+        margin-bottom: 15px;
+      }   
+
+      h2 {margin-top: 0}
+
+      .col-sm-4 {
+        padding-right: 0px;
+      }  
+
+
+    </style>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../bootstrap_v3/docs-assets/js/html5shiv.js"></script>
+      <script src="../bootstrap_v3/docs-assets/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    
+
+    <div class="container main">
+		<div class="modal fade" id="XYModal" style="display: none;" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+						  <h4 class="modal-title">X/Y Location</h4>
+						</div>
+						<div class="modal-body">
+						  <div class="form-group">
+							<div id="displayXY"></div>
+						  </div> 
+						  <form id="modal-form" class="form-inline">
+							<button id="btnDismiss" type="submit" class="btn btn-default btn-fixed" data-dismiss="modal">Dismiss</button>
+						  </form>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div>
+      <!-- Title -->
+      <div class="row">
+        <div class="col-sm-12">
+         <div class="panel-group" id="accordion0">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion0" href="#collapseOne0">
+                    Title
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseOne0" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <h4 id="mapTitle"></h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="panel-group" id="accordion1">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne1">
+                    Legend
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseOne1" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <div id="mapLegendDiv"><div id="tocDiv"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map -->    
+        <div class="col-sm-8">
+          <div class="panel-group panel-group-map" id="accordion2">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne2">
+                    Map
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseOne2" class="panel-collapse collapse in">
+                <div id="mapPanel" class="panel-body">
+                  <div id="mapDiv"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div id="mapDiv"></div> -->
+      </div>
+
+    </div><!-- /.container -->
+    <script type="text/javascript">
+        var package_path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+        var dojoConfig = {
+            //The location.pathname.replace() logic below may look confusing but all its doing is
+            // enabling us to load the api from a CDN and load local modules from the correct location.
+            packages: [{
+                name: "application",
+                location: package_path + '/js'
+            }, {
+                name: "bootstrap",
+                location: "http://rawgit.com/xsokev/Dojo-Bootstrap/master"
+            }, {
+				//if you want to host on your own server, download and put in folders then use path like: 
+				name: "agsjs",
+				location: package_path
+			}]
+        };
+    </script>
+    <script src="http://js.arcgis.com/3.10compact"></script>
+    <script>
+      require(["esri/map", 
+        "esri/dijit/Scalebar", 
+        "esri/dijit/Legend", 
+        "esri/arcgis/utils",  
+        "dojo/dom", 
+        "dojo/on", 
+        "dojo/query", 
+        "application/bootstrapmap",
+		"agsjs/dijit/TOC",
+		"bootstrap/Modal",
+        "bootstrap/Collapse",
+        "bootstrap/Dropdown", // needed for nav dropdowns
+        "dojo/domReady!"], 
+      function(Map, Scalebar, Legend, esriUtils, dom, on, query, BootstrapMap, TOC) {  
+        "use strict"
+        
+        var map;
+        var scalebar;
+        var legend;
+		var toc;
+
+        // Load web map automatically when the page loads
+        loadWebmap();
+
+        
+        function loadWebmap(e) {
+
+          // Get new webmap and extract map and map parts
+          resetMap();
+
+          // Webmaps
+          // 8602ad7753a54608a5c359f5977fba13
+          // f58996878ac24702afef792e52a07e55
+          // 441f68fc13ec4ec480287f9d46c3e319
+          var webmap = "68f12b304ad8495eb77fb55243c0ccc2";
+          var mapDeferred = BootstrapMap.createWebMap(webmap,"mapDiv", {
+            slider: true,
+            nav:false,
+            smartNavigation:false          
+          });
+
+          mapDeferred.then(function(response) {
+            map = response.map;
+
+            // Add titles
+            dom.byId("mapTitle").innerHTML = response.itemInfo.item.title;
+            //dom.byId("mapSubTitle").innerHTML = response.itemInfo.item.snippet;
+            // Add scalebar and legend
+            var layers = esri.arcgis.utils.getLegendLayers(response);  
+            if(map.loaded){
+              initMapParts(layers);
+            }
+            else{
+              on(map,"load",function(){
+                initMapParts(layers);
+              });
+            }
+			
+			map.on("click", function(e) {
+				query("#displayXY").innerHTML(e.mapPoint.x + ", " + e.mapPoint.y);
+				query("#XYModal").modal("show"); 
+			});
+
+          },function(error){
+            alert("Sorry, couldn't load webmap!");
+            console.log("Error loading webmap: " & dojo.toJson(error));           
+          });
+        }
+        
+        function initMapParts(layers){
+         //add scalebar
+          scalebar = new Scalebar({
+            map:map,
+            scalebarUnit: 'english'
+          });
+		  query("#collapseOne0").collapse("show"); 
+          //add legend
+          if (legend) {
+            /*legend.map = map;
+            legend.refresh(layers);*/
+          }
+          else {
+			toc = new TOC({
+				map: map,
+				layerInfos: layers
+			}, 'tocDiv');
+			toc.startup();
+			toc.on('load', function () {
+				if (console)
+					console.log('TOC loaded');
+
+			});
+			query("#collapseOne1").collapse("show"); 
+			/*
+			
+            legend = new Legend({
+                map:map,
+                layerInfos:layers
+              },"mapLegendDiv");
+            legend.startup();*/
+          }
+        }
+
+        function resetMap() {
+          if (map) { 
+            BootstrapMap.destroy(map);
+            map.removeAllLayers();
+            map.spatialReference = null;
+            map.destroy();
+          }
+          if (scalebar)
+           scalebar.destroy();
+          if (legend) {
+           // dom.byId("mapLegendDiv").innerHTML = "";
+          }        
+        }
+
+      });
+    </script>
+  </body>
+</html>
