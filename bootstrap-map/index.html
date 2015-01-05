@@ -22,14 +22,14 @@
 
 
     <!-- Bootstrap-map-js -->
-    <link rel="stylesheet" type="text/css" href="http://js.arcgis.com/3.10/js/esri/css/esri.css">   
+    <link rel="stylesheet" type="text/css" href="http://js.arcgis.com/3.12/esri/css/esri.css">   
     <link rel="stylesheet" type="text/css" href="css/bootstrapmap.css">   
     
     <style type="text/css">
 
       #mapDiv {
        min-height: 90px; 
-       max-height: 350px;
+       max-height: 459px;
       }
 
       #mapLegendDiv {
@@ -83,27 +83,9 @@
     
 
     <div class="container main">
-		<div class="modal fade" id="XYModal" style="display: none;" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-						  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-						  <h4 class="modal-title">X/Y Location</h4>
-						</div>
-						<div class="modal-body">
-						  <div class="form-group">
-							<div id="displayXY"></div>
-						  </div> 
-						  <form id="modal-form" class="form-inline">
-							<button id="btnDismiss" type="submit" class="btn btn-default btn-fixed" data-dismiss="modal">Dismiss</button>
-						  </form>
-						</div>
-					</div><!-- /.modal-content -->
-				</div><!-- /.modal-dialog -->
-			</div>
-      <!-- Title -->
+      <!-- Title & Legend -->
       <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-4">
          <div class="panel-group" id="accordion0">
             <div class="panel panel-default">
               <div class="panel-heading">
@@ -120,12 +102,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Legend -->
-      <div class="row">
-        <div class="col-sm-4">
           <div class="panel-group" id="accordion1">
             <div class="panel panel-default">
               <div class="panel-heading">
@@ -135,7 +111,7 @@
                   </a>
                 </h4>
               </div>
-              <div id="collapseOne1" class="panel-collapse collapse">
+              <div id="collapseOne1" class="panel-collapse collapse" style="height:100%;">
                 <div class="panel-body">
                   <div id="mapLegendDiv"><div id="tocDiv"></div></div>
                 </div>
@@ -155,7 +131,7 @@
                   </a>
                 </h4>
               </div>
-              <div id="collapseOne2" class="panel-collapse collapse in">
+              <div id="collapseOne2" class="panel-collapse collapse in" style="height:100%;">
                 <div id="mapPanel" class="panel-body">
                   <div id="mapDiv"></div>
                 </div>
@@ -186,9 +162,9 @@
 			}]
         };
     </script>
-    <script src="http://js.arcgis.com/3.10compact"></script>
+    <script src="http://js.arcgis.com/3.12compact"></script>
     <script>
-      require(["esri/map", 
+      require(["esri/map",  
         "esri/dijit/Scalebar", 
         "esri/dijit/Legend", 
         "esri/arcgis/utils",  
@@ -197,11 +173,17 @@
         "dojo/query", 
         "application/bootstrapmap",
 		"agsjs/dijit/TOC",
+		"esri/graphic",
+        "esri/geometry/webMercatorUtils",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/InfoTemplate", 
+		"esri/Color",
 		"bootstrap/Modal",
         "bootstrap/Collapse",
         "bootstrap/Dropdown", // needed for nav dropdowns
         "dojo/domReady!"], 
-      function(Map, Scalebar, Legend, esriUtils, dom, on, query, BootstrapMap, TOC) {  
+      function(Map, Scalebar, Legend, esriUtils, dom, on, query, BootstrapMap, TOC, Graphic, webMercatorUtils, SimpleMarkerSymbol, SimpleLineSymbol, InfoTemplate, Color) {  
         "use strict"
         
         var map;
@@ -218,11 +200,15 @@
           // Get new webmap and extract map and map parts
           resetMap();
 
-          // Webmaps
-          // 8602ad7753a54608a5c359f5977fba13
-          // f58996878ac24702afef792e52a07e55
-          // 441f68fc13ec4ec480287f9d46c3e319
+          /**ARCGIS ONLINE/PORTAL ID (REPLACE WITH ENLINK MAP ID)**/
           var webmap = "68f12b304ad8495eb77fb55243c0ccc2";
+		  
+		  /*****ENABLON X & Y COORDDINATE INPUT FROM FORM*****/
+		  var x = -97;
+		  var y = 33;
+		  /***************************************************/
+		  
+		  
           var mapDeferred = BootstrapMap.createWebMap(webmap,"mapDiv", {
             slider: true,
             nav:false,
@@ -231,7 +217,11 @@
 
           mapDeferred.then(function(response) {
             map = response.map;
+			var CenPoint = new esri.geometry.Point({ "x": x, "y": y, " spatialReference": { " wkid": 4326 } });
 
+			var mercator = esri.geometry.geographicToWebMercator(CenPoint);
+			map.centerAt(mercator);
+			
             // Add titles
             dom.byId("mapTitle").innerHTML = response.itemInfo.item.title;
             //dom.byId("mapSubTitle").innerHTML = response.itemInfo.item.snippet;
@@ -247,8 +237,38 @@
             }
 			
 			map.on("click", function(e) {
-				query("#displayXY").innerHTML(e.mapPoint.x + ", " + e.mapPoint.y);
-				query("#XYModal").modal("show"); 
+				map.graphics.clear();
+				//make a new point symbol
+				var symbol = new SimpleMarkerSymbol(
+					SimpleMarkerSymbol.STYLE_CIRCLE, 
+					15, 
+					new SimpleLineSymbol(
+						SimpleLineSymbol.STYLE_SOLID, 
+						new Color([0, 0, 255, 0.5]), 
+						8
+					), 
+					new Color([0, 0, 255])
+				);
+
+				//set the location to that of the mouse-click
+				var location = e.mapPoint;
+				//convert web Mercator coordinates to latitude & longitude (for Enablon)
+				var latlng = esri.geometry.webMercatorToGeographic(location);
+				var attr = {"Xcoord":latlng.x,"Ycoord":latlng.y};
+				
+				var infoTemplate = new InfoTemplate("Location", "Latitude: ${Ycoord}<br/>Longitude: ${Xcoord} <br/>");
+				// add the graphic to the map
+				var graphic = new Graphic(location, symbol, attr, infoTemplate);
+				map.graphics.add(graphic);
+					
+				map.infoWindow.setTitle(graphic.getTitle());
+				map.infoWindow.setContent(graphic.getContent());
+				
+				/***COORDINATES TO RETURN TO ENABLON****/
+				var returnX = latlng.x;
+				var returny = latlng.y;
+				/***************************************/
+			
 			});
 
           },function(error){
@@ -281,13 +301,6 @@
 
 			});
 			query("#collapseOne1").collapse("show"); 
-			/*
-			
-            legend = new Legend({
-                map:map,
-                layerInfos:layers
-              },"mapLegendDiv");
-            legend.startup();*/
           }
         }
 
@@ -300,9 +313,6 @@
           }
           if (scalebar)
            scalebar.destroy();
-          if (legend) {
-           // dom.byId("mapLegendDiv").innerHTML = "";
-          }        
         }
 
       });
