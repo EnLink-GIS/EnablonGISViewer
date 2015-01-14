@@ -173,6 +173,8 @@
         "dojo/query", 
         "application/bootstrapmap",
 		"agsjs/dijit/TOC",
+		"esri/arcgis/Portal", 
+		"esri/config",
 		"esri/graphic",
         "esri/geometry/webMercatorUtils",
         "esri/symbols/SimpleMarkerSymbol",
@@ -183,7 +185,7 @@
         "bootstrap/Collapse",
         "bootstrap/Dropdown", // needed for nav dropdowns
         "dojo/domReady!"], 
-      function(Map, Scalebar, Legend, esriUtils, dom, on, query, BootstrapMap, TOC, Graphic, webMercatorUtils, SimpleMarkerSymbol, SimpleLineSymbol, InfoTemplate, Color) {  
+      function(Map, Scalebar, Legend, esriUtils, dom, on, query, BootstrapMap, TOC, arcgisPortal, config, Graphic, webMercatorUtils, SimpleMarkerSymbol, SimpleLineSymbol, InfoTemplate, Color) {  
         "use strict"
         
         var map;
@@ -200,7 +202,8 @@
           // Get new webmap and extract map and map parts
           resetMap();
 
-          /**ARCGIS ONLINE/PORTAL ID (REPLACE WITH ENLINK MAP ID)**/
+          /**ARCGIS ONLINE/PORTAL URL & ID (REPLACE WITH ENLINK URL & MAP ID)**/
+		  var portal = new arcgisPortal.Portal('http://www.arcgis.com');
           var webmap = "68f12b304ad8495eb77fb55243c0ccc2";
 		  
 		  /*****ENABLON X & Y COORDDINATE INPUT FROM FORM*****/
