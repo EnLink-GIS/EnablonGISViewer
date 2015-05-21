@@ -30,142 +30,21 @@
   border-bottom: 1px solid #cccccc;
 }
 
-/*** Restyle Esri Popup ***/
-.esriPopupWrapper {
-  font-size: 14px;
-  font-weight: normal;
-  line-height: 18px;
-  background-color: #f7f7f7;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #333333;
-}
-
-.esriPopup .titlePane, .esriPopup .contentPane, .esriPopup .actionsPane  {
-  padding: 8px 14px;
-  border: none;
-  max-height: 200px;
-  background-color: #f7f7f7;
-}
-
-.esriPopup .titlePane, {
-  padding-top: 10px;
-  color: #333333;
-}
-
-.esriPopup .title {
-  color: #333333;
-}
-
-/*.esriPopup .titleButton {
-  background: url(../images/popup.png) no-repeat;
-}*/
-
-/*.esriPopup .titleButton, .esriPopup .pointer, .esriPopup .outerPointer {
-background: url(../images/popup.png) no-repeat;
-}*/
-
-.esriPopup .titleButton, .esriPopup .pointer, .esriPopup .outerPointer{
-  background: url(../images/popup.png) no-repeat;
-}
-
-
-.esriPopup .titlePane .spinner {
-  display: none;
-}
-
-.esriPopup .contentPane {
-  border-top: 1px solid #ebebeb;
-  color: #333333;
-  margin-bottom: 5px;
-}
-
-.esriViewPopup .mainSection .attrTable td.attrName {
-  color: #333333;
-}
-
-.esriViewPopup .mainSection .attrTable td {
-  color: #888888;
-}
-
-.esriPopup .actionsPane {
-  display: none;
-  margin-bottom: 15px;
-}
-
-.esriButton.close {
-  width: 21px;
-  line-height: inherit;
-}
-
-.esriPopup .titleButton.maximize, .esriPopup .titleButton.close,
-.esriPopup .titleButton.prev, .esriPopup .titleButton.next, .titleButton.restore {
-  margin-top: 8px;
-  margin-right: 8px;
-}
-
-.esriPopup .outerPointer.left {
-  left: 6px;
-  width: 10px;
-}
-
-.esriPopup .outerPointer.right {
-  background-position: -19px 0;
-  width: 10px;
-}
-
-.esriPopup .pointer.bottomLeft {
-  background-position: 0 -25px;
-  height: 12px
-}
-
-.esriPopup .pointer.bottomRight {
-  background-position: 0 -25px;
-  height: 12px;
-}
-
-.esriPopup .pointer.top {
-  background-position: -58px -36px;
-  height: 12px
-}
-
-.esriPopup .pointer.bottom {
-  background-position: 0 -25px;
-  height: 12px
-}
-
-.esriPopup .pointer.topRight {
-  background-position: -58px -36px;
-  height: 12px;
-}
-
-.esriPopup .pointer.topLeft {
-  background-position: -58px -36px;
-  height: 12px;
-}
-
-.esriPopup .titleButton.maximize {
-  display: none;
-}
-
-.esriPopup .titleButton.next, .esriPopup .titleButton.prev {
-  width: 13px;
-  height: 17px;
-}
-
-.esriPopup .titleButton.prev {
-  /*background-position: 0px -197px;*/
-  right: 55px;
-}
-
-.esriPopup .titleButton.next {
-  /*background-position: 0px -416px;*/
-  right: 28px;
-}
-
-/*.esriPopup .titleButton.close {
-  background-position: 0px -170px;
-}*/
-
+ /*Beginning of popup modifications*/
+      .esriPopup .titlePane {
+         background-color: #003300;
+         border-bottom: 1px solid #121310;
+         font-weight: bold;
+      }
+      .esriPopup a {
+         color: #DAE896;
+      }
+      .esriPopup .contentPane,
+      .esriPopup .actionsPane,
+      .esriPopup .pointer,
+      .esriPopup .outerPointer {
+         background-color: #B3B3B3;
+      }
 /*** Restyle Geocoder widget ***/
 .simpleGeocoder .esriGeocoderContainer {
   width: 100%;
@@ -262,4 +141,11 @@ body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom
   outline: none;
   background-color: #428bca;
 }
-
+	  
+#search {
+	 display: block;
+	 position: absolute;
+	 z-index: 2;
+	 top: 15px;
+	 left: 74px;
+}

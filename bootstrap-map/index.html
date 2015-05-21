@@ -2,38 +2,38 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<!-- Safari iOS - apps only -->
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black">
-	<!-- Chrome for Android - NEW! -->
-	<meta name="mobile-web-app-capable" content="yes">
-	<link rel="apple-touch-icon" href="images/brand.png">
-	<link rel="shortcut icon" href="images/favicon.ico">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Safari iOS - apps only -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- Chrome for Android - NEW! -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="images/brand.png">
+    <link rel="shortcut icon" href="images/favicon.ico">
 
-	<title>Clickable Bootstrap Map for Enlink</title>
+    <title>Clickable Bootstrap Map for Enlink</title>
 
-	<!-- Bootstrap core CSS -->
-	<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 
 
-	<!-- Bootstrap-map-js -->
-	<link rel="stylesheet" type="text/css" href="http://js.arcgis.com/3.13/esri/css/esri.css">
-	<link rel="stylesheet" type="text/css" href="css/bootstrapmap.css">
+    <!-- Bootstrap-map-js -->
+    <link rel="stylesheet" type="text/css" href="http://js.arcgis.com/3.13/esri/css/esri.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrapmap.css">
 
-	<style>
-		#mapDiv {
-			min-height: 100%;
-			max-height: 100%;
-		}
-	</style>
+    <style>
+        #mapDiv {
+            min-height: 100%;
+            max-height: 100%;
+        }
+    </style>
 
-	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	<!--[if lt IE 9]>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
       <script src="../bootstrap_v3/docs-assets/js/html5shiv.js"></script>
       <script src="../bootstrap_v3/docs-assets/js/respond.min.js"></script>
     <![endif]-->
@@ -41,164 +41,227 @@
 
 <body>
 
+    <div id="search"></div>
+    <div id="mapDiv"></div>
 
-	<div id="mapDiv"></div>
+    <script type="text/javascript">
+        var package_path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+        var dojoConfig = {
+            //The location.pathname.replace() logic below may look confusing but all its doing is
+            // enabling us to load the api from a CDN and load local modules from the correct location.
+            packages: [{
+                name: "application",
+                location: package_path + '/js'
+            }, {
+                name: "bootstrap",
+                location: "http://rawgit.com/xsokev/Dojo-Bootstrap/master"
+            }, {
+                //if you want to host on your own server, download and put in folders then use path like: 
+                name: "agsjs",
+                location: package_path
+            }]
+        };
+    </script>
+    <script src="http://js.arcgis.com/3.13compact"></script>
+    <script>
+        require(["esri/map",
+                "esri/dijit/Scalebar",
+                "esri/arcgis/utils",
+                "dojo/dom",
+                "dojo/on",
+                "dojo/query",
+                "application/bootstrapmap",
+                "esri/config",
+                "esri/graphic",
+                "esri/symbols/SimpleMarkerSymbol",
+                "esri/symbols/SimpleLineSymbol",
+                "esri/Color",
+                "esri/layers/FeatureLayer",
+                "esri/dijit/Search",
+                "esri/InfoTemplate",
+                "dojo/_base/array",
+                "dojo/domReady!"
+            ],
+            function (
+                Map,
+                Scalebar,
+                esriUtils,
+                dom,
+                on,
+                query,
+                BootstrapMap,
+                config,
+                Graphic,
+                SimpleMarkerSymbol,
+                SimpleLineSymbol,
+                Color,
+                FeatureLayer,
+                Search,
+                InfoTemplate,
+                array
+            ) {
+                "use strict"
 
-	<script type="text/javascript">
-		var package_path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
-		var dojoConfig = {
-			//The location.pathname.replace() logic below may look confusing but all its doing is
-			// enabling us to load the api from a CDN and load local modules from the correct location.
-			packages: [{
-				name: "application",
-				location: package_path + '/js'
-			}, {
-				name: "bootstrap",
-				location: "http://rawgit.com/xsokev/Dojo-Bootstrap/master"
-			}, {
-				//if you want to host on your own server, download and put in folders then use path like: 
-				name: "agsjs",
-				location: package_path
-			}]
-		};
-	</script>
-	<script src="http://js.arcgis.com/3.13compact"></script>
-	<script>
-		require(["esri/map",
-				"esri/dijit/Scalebar",
-				"esri/arcgis/utils",
-				"dojo/dom",
-				"dojo/on",
-				"dojo/query",
-				"application/bootstrapmap",
-				"esri/config",
-				"esri/graphic",
-				"esri/symbols/SimpleMarkerSymbol",
-				"esri/symbols/SimpleLineSymbol",
-				"esri/Color",
-				"dojo/domReady!"
-			],
-			function (Map, Scalebar, esriUtils, dom, on, query, BootstrapMap, config, Graphic, SimpleMarkerSymbol, SimpleLineSymbol, Color) {
-				"use strict"
+                var map;
+                var scalebar;
 
-				var map;
-				var scalebar;
-
-				// Load web map automatically when the page loads
-				loadWebmap();
-
-
-				function loadWebmap(e) {
-
-					// Get new webmap and extract map and map parts
-					resetMap();
-
-					/**ARCGIS ONLINE/PORTAL URL & ID (REPLACE WITH ENLINK URL & MAP ID)**/
-					//esriUtils.arcgisUrl = "http://gis.crosstexenergy.com/arcgis/sharing/content/items";
-					var webmap = "8e42e164d4174da09f61fe0d3f206641";
-
-					/*****ENABLON X & Y COORDDINATE INPUT FROM FORM*****/
-					var x = -97;
-					var y = 33;
-					/***************************************************/
-
-
-					var mapDeferred = BootstrapMap.createWebMap(webmap, "mapDiv", {
-						slider: true,
-						nav: false,
-						smartNavigation: false,
-						scrollWheelZoom: true
-					});
-
-					mapDeferred.then(function (response) {
-						map = response.map;
-						var CenPoint = new esri.geometry.Point({
-							"x": x,
-							"y": y,
-							" spatialReference": {
-								" wkid": 4326
-							}
-						});
-
-						// Convert Enablon Lat/Long to Web Mercator units
-						var mercator = esri.geometry.geographicToWebMercator(CenPoint);
-						map.centerAt(mercator);
-
-						// Add scalebar
-						var layers = esri.arcgis.utils.getLegendLayers(response);
-						if (map.loaded) {
-							initMapParts(layers);
-						} else {
-							on(map, "load", function () {
-								initMapParts(layers);
-							});
-						}
-						
-						map.on("load", function(){
-							map.infoWindow.resize(250,100);
-						});
-
-						map.on("click", function (e) {
-							map.graphics.clear();
-							//make a new point symbol
-							var symbol = new SimpleMarkerSymbol(
-								SimpleMarkerSymbol.STYLE_CIRCLE,
-								15,
-								new SimpleLineSymbol(
-									SimpleLineSymbol.STYLE_SOLID,
-									new Color([0, 0, 255, 0.5]),
-									8
-								),
-								new Color([0, 0, 255])
-							);
-							
-							// add the graphic to the map
-							var graphic = new Graphic(e.mapPoint, symbol);
-							map.graphics.add(graphic);
-							
-							var latitude = e.mapPoint.getLatitude();
-							var longitude = e.mapPoint.getLongitude();
-							map.infoWindow.setTitle("Coordinates");
-							map.infoWindow.setContent(
-								"lat/lon : " + latitude.toFixed(4) + ", " + longitude.toFixed(4)
-							);
-							map.infoWindow.show(e.mapPoint, map.getInfoWindowAnchor(e.screenPoint));
+                // Load web map automatically when the page loads
+                loadWebmap();
 
 
-							/***COORDINATES TO RETURN TO ENABLON****/
-							var returnX = longitude;
-							var returny = latitude;
-							/***************************************/
+                function loadWebmap(e) {
 
-						});
+                    // Get new webmap and extract map and map parts
+                    resetMap();
 
-					}, function (error) {
-						alert("Sorry, couldn't load webmap!");
-						console.log("Error loading webmap: " & dojo.toJson(error));
-					});
-				}
+                    /**ARCGIS ONLINE/PORTAL URL & ID (REPLACE WITH ENLINK URL & MAP ID)**/
+                    //esriUtils.arcgisUrl = "http://gis.crosstexenergy.com/arcgis/sharing/content/items";
+                    var webmap = "61095ec1b64145e88990ea9bd973c8ac";
 
-				function initMapParts(layers) {
-					//add scalebar
-					scalebar = new Scalebar({
-						map: map,
-						scalebarUnit: 'english'
-					});
-				}
+                    /*****ENABLON X & Y COORDDINATE INPUT FROM FORM*****/
+                    var x = -97;
+                    var y = 33;
+                    /***************************************************/
 
-				function resetMap() {
-					if (map) {
-						BootstrapMap.destroy(map);
-						map.removeAllLayers();
-						map.spatialReference = null;
-						map.destroy();
-					}
-					if (scalebar)
-						scalebar.destroy();
-				}
 
-			});
-	</script>
+                    var mapDeferred = BootstrapMap.createWebMap(webmap, "mapDiv", {
+                        slider: true,
+                        nav: false,
+                        smartNavigation: false,
+                        scrollWheelZoom: true
+                    });
+
+                    mapDeferred.then(function (response) {
+                        map = response.map;
+                        var CenPoint = new esri.geometry.Point({
+                            "x": x,
+                            "y": y,
+                            " spatialReference": {
+                                " wkid": 4326
+                            }
+                        });
+
+                        // Convert Enablon Lat/Long to Web Mercator units
+                        var mercator = esri.geometry.geographicToWebMercator(CenPoint);
+                        map.centerAt(mercator);
+
+                        // Add scalebar
+                        var layers = esri.arcgis.utils.getLegendLayers(response);
+                        if (map.loaded) {
+                            initMapParts(layers);
+                        } else {
+                            on(map, "load", function () {
+                                initMapParts(layers);
+                            });
+                        }
+
+                        map.on("load", function () {
+                            map.infoWindow.resize(250, 100);
+                        });
+
+                        map.on("click", function (e) {
+                            map.graphics.clear();
+                            //make a new point symbol
+                            var symbol = new SimpleMarkerSymbol(
+                                SimpleMarkerSymbol.STYLE_CIRCLE,
+                                15,
+                                new SimpleLineSymbol(
+                                    SimpleLineSymbol.STYLE_SOLID,
+                                    new Color([0, 0, 255, 0.5]),
+                                    8
+                                ),
+                                new Color([0, 0, 255])
+                            );
+
+                            // add the graphic to the map
+                            var graphic = new Graphic(e.mapPoint, symbol);
+                            map.graphics.add(graphic);
+
+                            var latitude = e.mapPoint.getLatitude();
+                            var longitude = e.mapPoint.getLongitude();
+                            map.infoWindow.setTitle("Coordinates");
+                            map.infoWindow.setContent(
+                                "lat/lon : " + latitude.toFixed(4) + ", " + longitude.toFixed(4)
+                            );
+                            map.infoWindow.show(e.mapPoint, map.getInfoWindowAnchor(e.screenPoint));
+
+
+                            /***COORDINATES TO RETURN TO ENABLON****/
+                            var returnX = longitude;
+                            var returny = latitude;
+                            /***************************************/
+
+                        });
+
+                        var layers = response.itemInfo.itemData.operationalLayers;
+                        var mylayers = [];
+                        // Convert operational layers to feature layers and add to an array
+                        array.forEach(layers, function (layer) {
+                            var addlayer = new FeatureLayer(layer.url, {
+                                outFields: ["*"]
+                            });
+                            mylayers.push(addlayer);
+                        }, "layerList");
+
+                        //Create search widget
+                        var search = new Search({
+                            map: map,
+                            enableSuggestions: true,
+                            //passing in empty source array to clear defaults such as 
+                            //"All" and the ArcGIS Online World Geocoding service
+                            sources: []
+                        }, "search");
+
+                        //listen for the load event and set the source properties 
+                        search.on("load", function () {
+
+                            var sources = search.sources;
+                            // Add each feature layer as a source for the search box
+                            array.forEach(mylayers, function (mylayer) {
+                                sources.push({
+                                    featureLayer: mylayer,
+                                    searchFields: ["PipelineID"],
+                                    exactMatch: false,
+                                    outFields: ["*"],
+                                    displayField: "PipelineID",
+									placeholder: "Search by Pipeline ID",
+
+                                    //Create an InfoTemplate and include three fields
+                                    infoTemplate: new InfoTemplate("Pipeline: ${PipelineID}", "Description: ${Descriptio}</br>Remarks: ${Remarks}")
+                                });
+                            }, "flayerList");
+                            //Set the sources above to the search widget
+                            search.set("sources", sources);
+                        });
+                        search.startup();
+
+                    }, function (error) {
+                        alert("Sorry, couldn't load webmap!");
+                        console.log("Error loading webmap: " & dojo.toJson(error));
+                    });
+                }
+
+                function initMapParts(layers) {
+                    //add scalebar
+                    scalebar = new Scalebar({
+                        map: map,
+                        scalebarUnit: 'english'
+                    });
+                }
+
+                function resetMap() {
+                    if (map) {
+                        BootstrapMap.destroy(map);
+                        map.removeAllLayers();
+                        map.spatialReference = null;
+                        map.destroy();
+                    }
+                    if (scalebar)
+                        scalebar.destroy();
+                }
+
+            });
+    </script>
 </body>
 
 </html>
